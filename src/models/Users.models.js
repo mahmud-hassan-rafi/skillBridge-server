@@ -2,24 +2,34 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const UserSchema = new mongoose.Schema({
-  fullname: {
-    firstname: {
-      type: String,
-      required: true,
-      minlength: [3, "Firstname must be at least 3 characters"],
+const UserSchema = new mongoose.Schema(
+  {
+    fullname: {
+      firstname: {
+        type: String,
+        required: true,
+        minlength: [3, "Firstname must be at least 3 characters"],
+      },
+      lastname: { type: String, default: "" },
     },
-    lastname: { type: String, default: "" },
+    email: { type: String, required: true, unique: true, index: true },
+    password: { type: String, required: true, select: false },
+    role: {
+      type: String,
+      enum: ["instructor", "student"],
+      default: "student",
+      required: true,
+    },
+    imageUrl: { type: String, required: true },
+    enrolledCourses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
   },
-  email: { type: String, required: true, unique: true, index: true },
-  password: { type: String, required: true, select: false },
-  role: {
-    type: String,
-    enum: ["instructor", "student"],
-    default: "student",
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 UserSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
