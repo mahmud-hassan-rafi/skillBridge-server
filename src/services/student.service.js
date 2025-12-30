@@ -1,6 +1,13 @@
 import User from "../models/Users.models.js";
 
-export const createStudent = async ({ fullname, email, password, role }) => {
+export const createStudent = async ({
+  fullname,
+  email,
+  password,
+  role,
+  gender,
+  imageUrl,
+}) => {
   if (!fullname.firstname || !email || !password || !role) {
     throw new Error("All fields are required");
   } else {
@@ -11,6 +18,8 @@ export const createStudent = async ({ fullname, email, password, role }) => {
       email,
       password: hashedPassword,
       role,
+      gender,
+      imageUrl,
     });
     return user;
   }
