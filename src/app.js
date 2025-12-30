@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import connectToDB from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
+import meRouter from "./routes/me.routes.js";
 dotenv.config();
 
 const app = express();
@@ -25,5 +26,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/me", meRouter);
 
 export default app;
