@@ -3,6 +3,7 @@ import Blacklist from "../models/Blacklist.model.js";
 import { createInstructor } from "../services/instructor.service.js";
 import User from "../models/Users.models.js";
 import { createStudent } from "../services/student.service.js";
+import jwt from "jsonwebtoken";
 
 export const registerController = async (req, res) => {
   console.log(req.body);
@@ -12,7 +13,7 @@ export const registerController = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { fullname, email, password, role } = req.body;
+  const { fullname, email, password, role, gender, imageUrl } = req.body;
   console.log(req.body);
 
   const isUserExists = await User.findOne({ email: email });
@@ -56,17 +57,25 @@ export const registerController = async (req, res) => {
         role,
       });
     } else if (req.body?.role === "student") {
-      const student = await createStudent({ fullname, email, password, role });
+      const student = await createStudent({
+        fullname,
+        email,
+        password,
+        role,
+        gender,
+        imageUrl,
+      });
 
       const token = student.generateAuthToken();
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 1000 * 86400 * 7,
       });
-      return res.status(201).json({
-        fullname,
-        email,
-        role,
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      return res.status(200).json({
+        message: "success",
+        ...decoded,
       });
     }
   } catch (error) {
@@ -114,10 +123,11 @@ export const loginController = async (req, res) => {
       maxAge: 1000 * 86400 * 7,
     });
 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     return res.status(200).json({
-      fullname: user.fullname,
-      email: user.email,
-      role: user.role,
+      message: "success",
+      ...decoded,
     });
   }
 };
