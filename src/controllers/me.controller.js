@@ -11,5 +11,8 @@ export const enrollementsController = async (req, res) => {
       .status(404)
       .json({ message: "Login to see enrollments", navigate: "/login" });
   }
-  res.json({ message: "success", enrolledCourses: user?.enrolledCourses });
+  return res.json({
+    message: "success",
+    enrolledCourses: user?.enrolledCourses,
+  });
 };
