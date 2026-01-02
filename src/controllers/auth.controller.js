@@ -6,7 +6,6 @@ import { createStudent } from "../services/student.service.js";
 import jwt from "jsonwebtoken";
 
 export const registerController = async (req, res) => {
-  console.log(req.body);
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -14,7 +13,6 @@ export const registerController = async (req, res) => {
   }
 
   const { fullname, email, password, role, gender, imageUrl } = req.body;
-  console.log(req.body);
 
   const isUserExists = await User.findOne({ email: email });
   if (isUserExists) {
@@ -122,11 +120,8 @@ export const loginController = async (req, res) => {
       maxAge: 1000 * 86400 * 7,
     });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
     return res.status(200).json({
       message: "success",
-      ...decoded,
     });
   }
 };
