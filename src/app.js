@@ -5,11 +5,16 @@ import cookieParser from "cookie-parser";
 import connectToDB from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
 import meRouter from "./routes/me.routes.js";
+import connectCloudinary from "./config/cloudinary.js";
 dotenv.config();
 
 const app = express();
-connectToDB();
 
+// connect to database
+await connectToDB();
+await connectCloudinary();
+
+// middlewares
 const corsOptions = {
   origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE"],
