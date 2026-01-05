@@ -15,10 +15,11 @@ export const isAuthenticatedMiddlewares = async (req, res, next) => {
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const isUserExists = await User.findById(decoded._id);
+  const isUserExists = await User.findById(decoded._id).lean();
+
   if (!isUserExists) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  req.user = decoded;
+  req.user = isUserExists;
   next();
 };
