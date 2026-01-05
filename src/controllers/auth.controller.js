@@ -72,8 +72,8 @@ export const registerController = async (req, res) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       return res.status(200).json({
-        message: "success",
-        ...decoded,
+        success: true,
+        message: "Account creation successfull",
       });
     }
   } catch (error) {
@@ -121,12 +121,13 @@ export const loginController = async (req, res) => {
     });
 
     return res.status(200).json({
-      message: "success",
+      success: true,
+      message: "Login successfull",
     });
   }
 };
 
-export const getProfileController = async (req, res) => {
+export const getProfileController = (req, res) => {
   return res.status(200).json({ message: "welcome!", ...req.user });
 };
 
