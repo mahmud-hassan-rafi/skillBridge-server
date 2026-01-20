@@ -11,8 +11,11 @@ dotenv.config();
 const app = express();
 
 // connect to database
-connectToDB();
-connectCloudinary();
+app.use(async (req, res, next) => {
+  await connectToDB();
+  await connectCloudinary();
+  next();
+});
 
 // middlewares
 const corsOptions = {
