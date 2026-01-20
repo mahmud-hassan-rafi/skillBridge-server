@@ -2,12 +2,12 @@
   "name": "skillbridge-server",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "src/app.js",
   "type": "module",
   "scripts": {
     "server": "nodemon --inspect src/server.js",
-    "start": "node src/server.js",
-    "build": "node src/server.js"
+    "start": "node src/app.js",
+    "build": "node src/app.js"
   },
   "keywords": [],
   "author": "",
