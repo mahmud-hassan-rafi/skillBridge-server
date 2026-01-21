@@ -95,35 +95,39 @@ export const registerController = async (req, res) => {
 };
 
 export const loginController = async (req, res) => {
-  const { email, password, role } = req.body;
+  try {
+    const { email, password, role } = req.body;
 
-  const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select("+password");
 
-  if (!user) {
-    return res.status(401).json({ message: "Invalid email or password" });
-  }
-  if (user.role !== role) {
-    return res.status(401).json({
-      message: "Invalid email or password -> role mismatched",
-      navigate: `${
-        user.role === "instructor" ? "/instructor/login" : "/login"
-      }`,
-    });
-  }
-  const isPasswordMatched = await user.comparePassword(password);
-  if (!isPasswordMatched) {
-    return res.status(401).json({ message: "Invalid email or password" });
-  } else {
-    const token = user.generateAuthToken();
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 1000 * 86400 * 7,
-    });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+    if (user.role !== role) {
+      return res.status(401).json({
+        message: "Invalid email or password -> role mismatched",
+        navigate: `${
+          user.role === "instructor" ? "/instructor/login" : "/login"
+        }`,
+      });
+    }
+    const isPasswordMatched = await user.comparePassword(password);
+    if (!isPasswordMatched) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    } else {
+      const token = user.generateAuthToken();
+      res.cookie("token", token, {
+        httpOnly: true,
+        maxAge: 1000 * 86400 * 7,
+      });
 
-    return res.status(200).json({
-      success: true,
-      message: "Login successfull",
-    });
+      return res.status(200).json({
+        success: true,
+        message: "Login successfull",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
