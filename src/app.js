@@ -10,7 +10,8 @@ dotenv.config();
 
 const app = express();
 
-// connect to database
+// connect to cloudinary
+await connectCloudinary();
 
 // middlewares
 const corsOptions = {
@@ -30,13 +31,13 @@ app.get("/", (req, res) => {
 
 app.use(
   "/api/auth",
-  app.use(async (req, res, next) => {
+  async (req, res, next) => {
     await connectToDB();
-    await connectCloudinary();
     next();
-  }),
+  },
   authRouter,
 );
+
 app.use("/api/me", meRouter);
 
 export default app;
