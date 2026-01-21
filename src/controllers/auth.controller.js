@@ -48,6 +48,8 @@ export const registerController = async (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 1000 * 86400 * 7,
+        secure: true,
+        sameSite: "none",
       });
       return res.status(201).json({
         fullname,
@@ -68,6 +70,8 @@ export const registerController = async (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 1000 * 86400 * 7,
+        secure: true,
+        sameSite: "none",
       });
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -119,6 +123,8 @@ export const loginController = async (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 1000 * 86400 * 7,
+        secure: true,
+        sameSite: "none",
       });
 
       return res.status(200).json({
