@@ -5,6 +5,8 @@ import User from "../models/Users.models.js";
 import { createStudent } from "../services/student.service.js";
 import jwt from "jsonwebtoken";
 
+const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL;
+
 export const registerController = async (req, res) => {
   const errors = validationResult(req);
 
@@ -48,8 +50,8 @@ export const registerController = async (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 1000 * 86400 * 7,
-        secure: isProd, // prod এ true
-        sameSite: isProd ? "none" : "lax",
+        secure: isProd, // production ee true
+        sameSite: isProd ? "none" : "lax", // lax is default
       });
       return res.status(201).json({
         fullname,
@@ -143,7 +145,11 @@ export const getProfileController = (req, res) => {
 };
 
 export const logoutController = async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+  });
   const token =
     req.cookies.token || req.headers.authorization.replace("Bearer ", "");
   await Blacklist.create({ token: token });
