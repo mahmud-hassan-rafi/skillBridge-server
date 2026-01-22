@@ -52,6 +52,7 @@ export const registerController = async (req, res) => {
         maxAge: 1000 * 86400 * 7,
         secure: isProd, // production ee true
         sameSite: isProd ? "none" : "lax", // lax is default
+        path: "/",
       });
       return res.status(201).json({
         fullname,
@@ -127,6 +128,7 @@ export const loginController = async (req, res) => {
         maxAge: 1000 * 86400 * 7,
         secure: isProd, // prod এ true
         sameSite: isProd ? "none" : "lax",
+        path: "/",
       });
 
       return res.status(200).json({
@@ -149,6 +151,7 @@ export const logoutController = async (req, res) => {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? "none" : "lax",
+    path: "/",
   });
   const token =
     req.cookies.token || req.headers.authorization.replace("Bearer ", "");
