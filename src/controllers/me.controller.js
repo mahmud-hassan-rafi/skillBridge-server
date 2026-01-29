@@ -71,7 +71,7 @@ export const updateProfileController = async (req, res) => {
       const newPasswordHash = await bcrypt.hash(userData?.newPassword, 10);
       updates["password"] = newPasswordHash;
 
-      const updatedUser = await User.findByIdAndUpdate(
+      await User.findByIdAndUpdate(
         user._id,
         {
           $set: updates,
@@ -79,7 +79,9 @@ export const updateProfileController = async (req, res) => {
         { new: true, runValidators: true },
       ).select("+password");
 
-      return res.status(200).json({ user: updatedUser });
+      return res
+        .status(200)
+        .json({ success: true, message: "successfully updated" });
     } else {
       return res
         .status(401)
@@ -92,7 +94,7 @@ export const updateProfileController = async (req, res) => {
     return res.status(400).json({ success: false, message: "No changes" });
   }
 
-  const updatedUser = await User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     user._id,
     {
       $set: updates,
@@ -100,14 +102,14 @@ export const updateProfileController = async (req, res) => {
     { new: true, runValidators: true },
   );
 
-  res.status(200).json({ user: updatedUser });
+  res.status(200).json({ success: true, message: "successfully updated" });
 };
 
 // delete account controller
 export const deleteAccountController = async (req, res) => {
   const user = req.user;
 
-  const delatedAccount = await User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     user._id,
     {
       isDeleted: true,
@@ -115,5 +117,5 @@ export const deleteAccountController = async (req, res) => {
     { new: true },
   );
 
-  res.json({ delatedAccount });
+  res.json({ success: true, message: "Account deletion successfull" });
 };
