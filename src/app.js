@@ -6,6 +6,7 @@ import connectToDB from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
 import meRouter from "./routes/me.routes.js";
 import connectCloudinary from "./config/cloudinary.js";
+import { isAuthenticatedMiddlewares } from "./middlewares/Auth.middleware.js";
 dotenv.config();
 
 const app = express();
@@ -38,6 +39,14 @@ app.use(
   authRouter,
 );
 
-app.use("/api/me", meRouter);
+app.use(
+  "/api/me",
+  async (req, res, next) => {
+    await connectToDB();
+    next();
+  },
+  isAuthenticatedMiddlewares,
+  meRouter,
+);
 
 export default app;

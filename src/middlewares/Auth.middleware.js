@@ -6,8 +6,6 @@ export const isAuthenticatedMiddlewares = async (req, res, next) => {
   const token =
     req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
 
-  console.log(token);
-
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -18,11 +16,12 @@ export const isAuthenticatedMiddlewares = async (req, res, next) => {
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const isUserExists = await User.findById(decoded._id).lean();
+  const user = await User.findById(decoded._id).lean();
 
-  if (!isUserExists) {
-    return res.status(401).json({ message: "Unauthorized" });
+  if (!user || user.isDeleted) {
+    return res.status(401).json({ message: "Account deleted or not found" });
   }
-  req.user = isUserExists;
+
+  req.user = user;
   next();
 };
