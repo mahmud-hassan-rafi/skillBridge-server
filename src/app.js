@@ -17,7 +17,7 @@ await connectCloudinary();
 // middlewares
 const corsOptions = {
   origin: ["http://localhost:5173", "https://skillbridge-orcin.vercel.app"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
