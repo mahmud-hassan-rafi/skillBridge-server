@@ -13,11 +13,11 @@ router
   .route("/profile")
   .patch(
     [
-      body("fullname.firstname")
+      body("firstname")
         .optional()
         .isLength({ min: 3 })
         .withMessage("Firstname must be at least 3 characters"),
-      body("fullname.lastname")
+      body("lastname")
         .optional()
         .isLength({ min: 3 })
         .withMessage("Lastname must be at least 3 characters"),

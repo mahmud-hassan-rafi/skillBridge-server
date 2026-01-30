@@ -34,18 +34,12 @@ export const updateProfileController = async (req, res) => {
 
   // add changes in the updates obj
   // update firstname
-  if (
-    userData.fullname?.firstname &&
-    user.fullname?.firstname !== userData.fullname?.firstname
-  ) {
-    updates["fullname.firstname"] = userData.fullname?.firstname;
+  if (userData?.firstname && user.fullname?.firstname !== userData?.firstname) {
+    updates["fullname.firstname"] = userData?.firstname;
   }
   // update lastname
-  if (
-    userData.fullname?.lastname &&
-    user.fullname?.lastname !== userData.fullname?.lastname
-  ) {
-    updates["fullname.lastname"] = userData.fullname?.lastname;
+  if (userData?.lastname && user.fullname?.lastname !== userData?.lastname) {
+    updates["fullname.lastname"] = userData?.lastname;
   }
 
   // update email
