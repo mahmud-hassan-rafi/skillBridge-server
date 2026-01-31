@@ -48,7 +48,16 @@ export const updateProfileController = async (req, res) => {
   }
 
   // update password
-  if (userData?.oldPassword && userData?.newPassword) {
+  if (userData?.newPassword) {
+    if (!userData?.oldPassword) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "You have to enter your old password",
+        });
+    }
+
     const { password: userOldPassword } = await User.findById(user._id).select(
       "+password",
     );
