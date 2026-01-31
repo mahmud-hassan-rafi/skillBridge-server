@@ -22,7 +22,7 @@ router
         .isLength({ min: 3 })
         .withMessage("Lastname must be at least 3 characters"),
       body("email").optional().isEmail().withMessage("Invalid email address"),
-      body("password")
+      body("newPassword")
         .optional()
         .isLength({ min: 6 })
         .withMessage("password must be at least 6 characters long"),
