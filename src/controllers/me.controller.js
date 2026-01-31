@@ -88,13 +88,29 @@ export const updateProfileController = async (req, res) => {
     return res.status(400).json({ success: false, message: "No changes" });
   }
 
-  await User.findByIdAndUpdate(
-    user._id,
-    {
-      $set: updates,
-    },
-    { new: true, runValidators: true },
-  );
+  try {
+    await User.findByIdAndUpdate(
+      user._id,
+      {
+        $set: updates,
+      },
+      { new: true, runValidators: true },
+    );
+  } catch (error) {
+    // MongoDB UNIQUE items error
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+
+      return res.status(400).json({
+        success: false,
+        message: `${field} already exists`,
+      });
+    }
+
+    return res
+      .status(500)
+      .json({ success: false, message: `Server Error: ${error}` });
+  }
 
   res.status(200).json({ success: true, message: "successfully updated" });
 };
