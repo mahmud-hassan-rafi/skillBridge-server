@@ -37,6 +37,7 @@ export const updateProfileController = async (req, res) => {
   if (userData?.firstname && user.fullname?.firstname !== userData?.firstname) {
     updates["fullname.firstname"] = userData?.firstname;
   }
+
   // update lastname
   if (userData?.lastname && user.fullname?.lastname !== userData?.lastname) {
     updates["fullname.lastname"] = userData?.lastname;
@@ -50,12 +51,10 @@ export const updateProfileController = async (req, res) => {
   // update password
   if (userData?.newPassword) {
     if (!userData?.oldPassword) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "You have to enter your old password",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "You have to enter your old password",
+      });
     }
 
     const { password: userOldPassword } = await User.findById(user._id).select(
@@ -92,6 +91,11 @@ export const updateProfileController = async (req, res) => {
     }
   }
 
+  // update user role
+  if (userData?.role && user.role !== userData?.role) {
+    updates["role"] = userData?.role;
+  }
+
   // checking for - does the data is same as previous?
   if (!updates || Object.keys(updates).length === 0) {
     return res.status(400).json({ success: false, message: "No changes" });
@@ -121,7 +125,7 @@ export const updateProfileController = async (req, res) => {
       .json({ success: false, message: `Server Error: ${error}` });
   }
 
-  res.status(200).json({ success: true, message: "successfully updated" });
+  res.status(200).json({ success: true, message: "successfull" });
 };
 
 // delete account controller
