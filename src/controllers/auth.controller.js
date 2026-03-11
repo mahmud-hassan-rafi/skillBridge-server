@@ -1,9 +1,7 @@
 import { validationResult } from "express-validator";
 import Blacklist from "../models/Blacklist.model.js";
-import { createInstructor } from "../services/instructor.service.js";
 import User from "../models/Users.models.js";
 import { createStudent } from "../services/student.service.js";
-import jwt from "jsonwebtoken";
 
 const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL;
 
@@ -18,13 +16,28 @@ export const registerController = async (req, res) => {
 
   const isUserExists = await User.findOne({ email: email });
   if (isUserExists) {
-    if (isUserExists?.role === "student" && req.body?.vehicle) {
+    /* 
+      এখানে আমরা চেক করছি যে যদি ইউজারটি ইন্সট্রাক্টর হিসেবে রেজিস্টার করতে চায় 
+      কিন্তু স্টুডেন্ট হিসেবে রেজিস্টার করা আছে, তাহলে তাকে স্টুডেন্ট লগইন পেজে নিয়ে
+      যাওয়া হবে। এবং যদি ইউজারটি স্টুডেন্ট হিসেবে রেজিস্টার করতে চায় কিন্তু ইন্সট্রাক্টর
+       হিসেবে রেজিস্টার করা আছে, তাহলে তাকে ইন্সট্রাক্টর লগইন পেজে নিয়ে যাওয়া হবে।
+    */
+    if (isUserExists?.role === "student" && req.body?.role === "instructor") {
       return res.status(400).json({
         message:
           "User account exists, Please login for create a instructor account",
         navigate: "/login",
       });
-    } else if (isUserExists?.role === "student" && !req.body?.vehicle) {
+    } else if (
+      /*
+      এখানে আমরা চেক করছি যে যদি ইউজারটি স্টুডেন্ট হিসেবে রেজিস্টার করতে চায় 
+      কিন্তু ইন্সট্রাক্টর হিসেবে রেজিস্টার করা আছে, তাহলে তাকে ইন্সট্রাক্টর লগইন পেজে 
+      নিয়ে যাওয়া হবে। এবং যদি ইউজারটি ইন্সট্রাক্টর হিসেবে রেজিস্টার করতে চায় কিন্তু 
+      স্টুডেন্ট হিসেবে রেজিস্টার করা আছে, তাহলে তাকে স্টুডেন্ট লগইন পেজে নিয়ে যাওয়া হবে।
+    */
+      isUserExists?.role === "student" &&
+      req.body?.role === "student"
+    ) {
       return res.status(400).json({
         message: "User already exists",
         navigate: "/login",
@@ -38,51 +51,27 @@ export const registerController = async (req, res) => {
   }
 
   try {
-    if (req.body?.role === "instructor") {
-      const instructor = await createInstructor({
-        fullname,
-        email,
-        password,
-        role,
-      });
+    const student = await createStudent({
+      fullname,
+      email,
+      password,
+      role,
+      gender,
+      imageUrl,
+    });
 
-      const token = instructor.generateAuthToken();
-      res.cookie("token", token, {
-        httpOnly: true,
-        maxAge: 1000 * 86400 * 7,
-        secure: isProd, // production ee true
-        sameSite: isProd ? "none" : "lax", // lax is default
-        path: "/",
-      });
-      return res.status(201).json({
-        fullname,
-        email,
-        role,
-      });
-    } else if (req.body?.role === "student") {
-      const student = await createStudent({
-        fullname,
-        email,
-        password,
-        role,
-        gender,
-        imageUrl,
-      });
+    const token = student.generateAuthToken();
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 1000 * 86400 * 7,
+      secure: isProd, // prod এ true
+      sameSite: isProd ? "none" : "lax",
+    });
 
-      const token = student.generateAuthToken();
-      res.cookie("token", token, {
-        httpOnly: true,
-        maxAge: 1000 * 86400 * 7,
-        secure: isProd, // prod এ true
-        sameSite: isProd ? "none" : "lax",
-      });
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      return res.status(200).json({
-        success: true,
-        message: "Account creation successfull",
-      });
-    }
+    return res.status(200).json({
+      success: true,
+      message: "Account creation successfull",
+    });
   } catch (error) {
     // MongoDB UNIQUE items error
     if (error.code === 11000) {
@@ -101,6 +90,7 @@ export const registerController = async (req, res) => {
   }
 };
 
+// login controller
 export const loginController = async (req, res) => {
   try {
     const { email, password, role } = req.body;
@@ -110,14 +100,7 @@ export const loginController = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-    if (user.role !== role) {
-      return res.status(401).json({
-        message: "Invalid email or password -> role mismatched",
-        navigate: `${
-          user.role === "instructor" ? "/instructor/login" : "/login"
-        }`,
-      });
-    }
+
     const isPasswordMatched = await user.comparePassword(password);
     if (!isPasswordMatched) {
       return res.status(401).json({ message: "Invalid email or password" });
@@ -142,10 +125,12 @@ export const loginController = async (req, res) => {
   }
 };
 
+// Get profile controller
 export const getProfileController = (req, res) => {
   return res.status(200).json({ message: "welcome!", ...req.user });
 };
 
+// Logout controller
 export const logoutController = async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
