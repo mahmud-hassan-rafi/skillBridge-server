@@ -7,6 +7,7 @@ import authRouter from "./routes/auth.routes.js";
 import meRouter from "./routes/me.routes.js";
 import connectCloudinary from "./config/cloudinary.js";
 import { isAuthenticatedMiddlewares } from "./middlewares/Auth.middleware.js";
+import paymentRouter from "./routes/payment.route.js";
 dotenv.config();
 
 const app = express();
@@ -48,5 +49,7 @@ app.use(
   isAuthenticatedMiddlewares,
   meRouter,
 );
+
+app.use("/api/payment", paymentRouter);
 
 export default app;
