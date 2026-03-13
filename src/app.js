@@ -1,6 +1,8 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import connectToDB from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
@@ -8,7 +10,7 @@ import meRouter from "./routes/me.routes.js";
 import connectCloudinary from "./config/cloudinary.js";
 import { isAuthenticatedMiddlewares } from "./middlewares/Auth.middleware.js";
 import paymentRouter from "./routes/payment.route.js";
-dotenv.config();
+import { stripe } from "./config/stripe.js";
 
 const app = express();
 
@@ -50,6 +52,6 @@ app.use(
   meRouter,
 );
 
-app.use("/api/payment", paymentRouter);
+app.use("/api/stripe", paymentRouter);
 
 export default app;
