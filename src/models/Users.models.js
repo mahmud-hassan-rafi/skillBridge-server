@@ -21,12 +21,6 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     imageUrl: { type: String, required: true },
-    enrolledCourses: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
-      },
-    ],
     isDeleted: {
       type: Boolean,
       default: false,
