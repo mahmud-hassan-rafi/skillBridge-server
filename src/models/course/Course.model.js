@@ -1,76 +1,5 @@
 import mongoose from "mongoose";
 
-/* ---------- Lecture Schema ---------- */
-const lectureSchema = new mongoose.Schema(
-  {
-    lectureId: {
-      type: String,
-      required: true,
-    },
-    lectureTitle: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    lectureDuration: {
-      type: Number, // seconds
-      required: true,
-    },
-    lectureUrl: {
-      type: String,
-      required: true,
-    },
-    isPreviewFree: {
-      type: Boolean,
-      default: false,
-    },
-    lectureOrder: {
-      type: Number,
-      required: true,
-    },
-  },
-  { _id: false }
-);
-
-/* ---------- Chapter Schema ---------- */
-const chapterSchema = new mongoose.Schema(
-  {
-    chapterId: {
-      type: String,
-      required: true,
-    },
-    chapterOrder: {
-      type: Number,
-      required: true,
-    },
-    chapterTitle: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    chapterContent: [lectureSchema], // lecture schema
-  },
-  { _id: false }
-);
-
-/* ---------- Rating Schema ---------- */
-const ratingSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: String, // or ObjectId if user is mongoose model
-      required: true,
-    },
-    rating: {
-      type: Number,
-      min: 1,
-      max: 5,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
-
-/* ---------- Course Schema ---------- */
 const courseSchema = new mongoose.Schema(
   {
     courseTitle: {
@@ -95,34 +24,30 @@ const courseSchema = new mongoose.Schema(
     },
     isPublished: {
       type: Boolean,
-      default: false,
+      default: true,
     },
-
-    courseContent: [chapterSchema],
-
     educator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
     },
 
-    enrolledStudents: [
-      {
-        type: String, // or ObjectId ref User
-      },
-    ],
-
-    courseRatings: [ratingSchema],
-
     courseThumbnail: {
-      type: String,
-      required: true,
+      url: {
+        type: String,
+        required: true,
+      },
+      public_id: {
+        type: String,
+        required: true,
+      },
     },
   },
   {
     timestamps: true,
     minimize: false,
-  }
+  },
 );
 
 const Course = mongoose.model("Course", courseSchema);
