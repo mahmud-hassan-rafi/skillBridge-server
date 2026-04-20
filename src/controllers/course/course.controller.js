@@ -8,6 +8,7 @@ import { getInstructorCourses } from "../../services/course/getInstuctorCourses.
 import { instructorEnrollmentList } from "../../services/course/enrollmentList.service.js";
 import cloudinary from "../../config/cloudinary.js";
 import getDashbaordData from "../../services/course/getDashboardData.service.js";
+import { getCourse } from "../../services/course/getCourse.service.js";
 
 export const addCoursesController = async (req, res) => {
   const errors = validationResult(req);
@@ -77,14 +78,20 @@ export const addCoursesController = async (req, res) => {
   }
 };
 
-export const getCourseController = (req, res) => {
+export const getCourseController = async (req, res) => {
   const { limit, skip } = req.query;
 
-  const courses = Course.find({})
-    .limit(limit || 4)
-    .skip(skip || 0);
+  const courses = await Course.find({})
+    .sort({ createdAt: -1 })
+    .limit(limit || 12)
+    .skip(skip || 0)
+    .lean();
 
-  return res.status(200).json({ success: true, courses });
+  const AllCourses = await Promise.all(
+    courses.map(async (course) => await getCourse(course._id)),
+  );
+
+  return res.status(200).json({ success: true, AllCourses });
 };
 
 export const getInstructorCoursesController = async (req, res) => {

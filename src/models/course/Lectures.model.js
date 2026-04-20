@@ -23,6 +23,10 @@ const LecturesSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  isPreviewFree: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Lecture = mongoose.model("Lecture", LecturesSchema);
