@@ -8,6 +8,7 @@ export const addLecture = async (chaptersPayload, chapters, session) => {
       lectureUrl: lecture?.lectureUrl,
       lectureOrder: lectureIndex + 1,
       chapterId: chapters[chapterIndex]._id,
+      isPreviewFree: lecture?.isPreviewFree,
     })),
   );
 
