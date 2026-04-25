@@ -10,6 +10,7 @@ export const stripeWebhook = async (req, res) => {
 
     console.log("Payment success for course:", courseId);
 
+    sendEmail();
     // এখানে enrollment create হবে
   }
 

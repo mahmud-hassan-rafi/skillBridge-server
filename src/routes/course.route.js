@@ -10,10 +10,13 @@ import { isInstructor } from "../middlewares/guard.middleware.js";
 import multer from "multer";
 import { body } from "express-validator";
 import { parseCourseContent } from "../middlewares/parseCourseContent.middleware.js";
+import getSingleCourseController from "../controllers/course/single.controller.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
+
+router.get("/get/:id", getSingleCourseController);
 
 router.get("/get", getCourseController);
 
