@@ -10,6 +10,7 @@ import meRouter from "./routes/me.routes.js";
 import { isAuthenticatedMiddlewares } from "./middlewares/Auth.middleware.js";
 import paymentRouter from "./routes/payment.route.js";
 import courseRouter from "./routes/course.route.js";
+import { sendEmail } from "./utils/sendEmail.js";
 
 const app = express();
 
@@ -32,6 +33,26 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello, World! API is working 🎉");
 });
+
+app.get("/test-email", async (req, res) => {
+  await sendEmail(
+    "amaricancitizen8@gmail.com",
+    "Test Mail",
+    "<h1>Email working</h1>",
+  );
+
+  res.send("Email sent");
+});
+
+app.post(
+  "/api/webhook/stripe",
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    console.log("WEBHOOK HIT");
+
+    res.status(200).send("Webhook received");
+  },
+);
 
 app.use(
   "/api/auth",
