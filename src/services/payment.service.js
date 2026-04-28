@@ -1,6 +1,6 @@
 import { stripe } from "../config/stripe.js";
 
-export const createPaymentIntentService = async (courseId, price) => {
+export const createPaymentIntentService = async (courseId, price, userId) => {
   const paymentIntent = await stripe.paymentIntents.create({
     amount: Math.round(price * 100),
     currency: "usd",
@@ -9,6 +9,7 @@ export const createPaymentIntentService = async (courseId, price) => {
     },
     metadata: {
       courseId,
+      userId: userId.toString(), // Added for webhook enrollment creation
     },
   });
 
