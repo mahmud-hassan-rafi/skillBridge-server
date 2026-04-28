@@ -4,6 +4,7 @@ import {
   createEnrollmentService,
   cancelEnrollmentService,
 } from "../services/enrollment.service.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 export const stripeWebhook = async (req, res) => {
   console.log("touching stripe webhook ()");
@@ -55,6 +56,7 @@ export const stripeWebhook = async (req, res) => {
         } else {
           console.log("⚠️ Missing metadata: courseId or userId");
         }
+        sendEmail();
       } catch (error) {
         console.error("❌ Enrollment creation failed:", error.message);
       }
