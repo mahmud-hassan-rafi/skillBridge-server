@@ -27,35 +27,15 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(express.json());
 
 // routes
 app.get("/", (req, res) => {
   res.send("Hello, World! API is working 🎉");
 });
 
-app.get("/test-email", async (req, res) => {
-  await sendEmail(
-    "amaricancitizen8@gmail.com",
-    "Test Mail",
-    "<h1>Email working</h1>",
-  );
-
-  res.send("Email sent");
-});
-
-app.post(
-  "/api/webhook/stripe",
-  express.raw({ type: "application/json" }),
-  (req, res) => {
-    console.log("WEBHOOK HIT");
-
-    res.status(200).send("Webhook received");
-  },
-);
-
 app.use(
   "/api/auth",
+  express.json(),
   async (req, res, next) => {
     await connectToDB();
     next();
@@ -65,6 +45,7 @@ app.use(
 
 app.use(
   "/api/me",
+  express.json(),
   async (req, res, next) => {
     await connectToDB();
     next();
@@ -75,6 +56,7 @@ app.use(
 
 app.use(
   "/api/courses",
+  express.json(),
   async (req, res, next) => {
     await connectToDB();
     next();
@@ -82,6 +64,7 @@ app.use(
   courseRouter,
 );
 
+// ⚠️ Stripe payment router (webhook with raw body is handled in the router)
 app.use("/api/stripe", paymentRouter);
 
 export default app;
