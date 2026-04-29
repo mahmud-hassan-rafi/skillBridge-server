@@ -10,6 +10,7 @@ import { Enrollment } from "../models/course/Enrollment.model.js";
 export const createEnrollmentService = async (
   studentId,
   courseId,
+  price,
   paymentId,
 ) => {
   try {
@@ -31,13 +32,9 @@ export const createEnrollmentService = async (
     const enrollment = await Enrollment.create({
       student: studentId,
       course: courseId,
+      price,
       progress: 0,
     });
-
-    console.log("New enrollment created:", enrollment._id);
-    console.log("Student:", studentId);
-    console.log("Course:", courseId);
-    console.log("Payment ID:", paymentId);
 
     return enrollment;
   } catch (error) {

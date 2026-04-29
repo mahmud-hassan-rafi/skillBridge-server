@@ -10,6 +10,7 @@ export const createPaymentIntentService = async (courseId, price, userId) => {
     metadata: {
       courseId,
       userId: userId.toString(), // Added for webhook enrollment creation
+      price,
     },
   });
 

@@ -14,6 +14,11 @@ const enrollmentSchema = new mongoose.Schema(
       required: true,
     },
 
+    amount: {
+      type: Number,
+      required: true,
+    },
+
     progress: {
       type: Number,
       default: 0, // %
