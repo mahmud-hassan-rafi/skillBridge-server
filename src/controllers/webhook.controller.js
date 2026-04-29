@@ -22,7 +22,7 @@ const mailOptions = (user, course, amount, paymentId) => {
 
               <!-- Header -->
               <tr>
-                <td align="center" style="background-color:#111827; padding:30px;">
+                <td align="center" style="background-color:#111827; padding:30px 20px;">
                   <h1 style="margin:0; color:#ffffff; font-size:28px;">
                     Enrollment Confirmed 🎉
                   </h1>
@@ -31,7 +31,7 @@ const mailOptions = (user, course, amount, paymentId) => {
 
               <!-- Body -->
               <tr>
-                <td style="padding:40px 35px; color:#374151;">
+                <td style="padding:40px 25px; color:#374151;">
 
                   <p style="font-size:16px; margin:0 0 20px;">
                     Hi <strong>${Object.values(user?.fullname).join(" ") || "student"}</strong>,
@@ -103,7 +103,7 @@ const mailOptions = (user, course, amount, paymentId) => {
 
                   <p style="font-size:14px; margin-top:30px;">
                     Best regards,<br />
-                    <strong>Your Platform Team</strong>
+                    <strong>Skillbridge</strong>
                   </p>
 
                 </td>
@@ -112,7 +112,7 @@ const mailOptions = (user, course, amount, paymentId) => {
               <!-- Footer -->
               <tr>
                 <td align="center" style="background-color:#f9fafb; padding:25px; font-size:13px; color:#6b7280;">
-                  © ${new Date().getFullYear()} Your Platform. All rights reserved.
+                  © ${new Date().getFullYear()} Skillbridge. All rights reserved.
                 </td>
               </tr>
 

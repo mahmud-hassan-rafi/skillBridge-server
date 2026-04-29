@@ -1,4 +1,4 @@
-import { Enrollment } from "../models/course/Enrollment.model.js";
+import Enrollment from "../models/course/Enrollment.model.js";
 
 /**
  * Create enrollment for a student in a course
