@@ -10,7 +10,7 @@ import meRouter from "./routes/me.routes.js";
 import { isAuthenticatedMiddlewares } from "./middlewares/Auth.middleware.js";
 import paymentRouter from "./routes/payment.route.js";
 import courseRouter from "./routes/course.route.js";
-import { sendEmail } from "./utils/sendEmail.js";
+import enrollmentRouter from "./routes/enrollment.route.js";
 
 const app = express();
 
@@ -64,7 +64,15 @@ app.use(
   courseRouter,
 );
 
-// ⚠️ Stripe payment router (webhook with raw body is handled in the router)
+app.use(
+  "/api/enrollment",
+  async (req, res, next) => {
+    await connectToDB();
+    next();
+  },
+  enrollmentRouter,
+);
+
 app.use("/api/stripe", paymentRouter);
 
 export default app;

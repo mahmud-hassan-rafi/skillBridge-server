@@ -1,5 +1,5 @@
 import Course from "../../models/course/Course.model.js";
-import { Enrollment } from "../../models/course/Enrollment.model.js";
+import Enrollment from "../../models/course/Enrollment.model.js";
 
 export const getInstructorCourses = async (educator, limit = 12, skip = 0) => {
   const instructorCourses = await Course.find({ educator })

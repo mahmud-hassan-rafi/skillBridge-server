@@ -2,10 +2,8 @@ import Chapter from "../../models/course/Chapter.model.js";
 import Course from "../../models/course/Course.model.js";
 import Lecture from "../../models/course/Lectures.model.js";
 
-export const getCourse = async (courseId, limit = 12, skip = 0) => {
+export const getCourse = async (courseId) => {
   const course = await Course.findById(courseId)
-    .limit(limit)
-    .skip(skip)
     .populate({ path: "educator", select: "_id fullname" })
     .lean();
   if (!course) return null;
