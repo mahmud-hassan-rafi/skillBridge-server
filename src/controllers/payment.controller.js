@@ -2,11 +2,6 @@ import { createPaymentIntentService } from "../services/payment.service.js";
 
 export const createPaymentIntent = async (req, res) => {
   try {
-    console.log(req.user);
-    console.log(typeof req.user?._id);
-    console.log(String(req.user._id));
-    console.log(req.user._id.toString());
-
     const { courseId, price } = req.body;
     const user = req.user; // Get from authenticated request
     console.log(courseId);
