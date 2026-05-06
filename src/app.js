@@ -14,6 +14,8 @@ import enrollmentRouter from "./routes/enrollment.route.js";
 
 const app = express();
 
+console.log(process.env.FRONTEND_URL);
+
 // middlewares
 const corsOptions = {
   origin: [
