@@ -12,9 +12,9 @@ import paymentRouter from "./routes/payment.route.js";
 import courseRouter from "./routes/course.route.js";
 import enrollmentRouter from "./routes/enrollment.route.js";
 
-const app = express();
+await connectToDB();
 
-console.log(process.env.FRONTEND_URL);
+const app = express();
 
 // middlewares
 const corsOptions = {
@@ -35,45 +35,13 @@ app.get("/", (req, res) => {
   res.send("Hello, World! API is working 🎉");
 });
 
-app.use(
-  "/api/auth",
-  express.json(),
-  async (req, res, next) => {
-    await connectToDB();
-    next();
-  },
-  authRouter,
-);
+app.use("/api/auth", express.json(), authRouter);
 
-app.use(
-  "/api/me",
-  express.json(),
-  async (req, res, next) => {
-    await connectToDB();
-    next();
-  },
-  isAuthenticatedMiddlewares,
-  meRouter,
-);
+app.use("/api/me", express.json(), isAuthenticatedMiddlewares, meRouter);
 
-app.use(
-  "/api/courses",
-  express.json(),
-  async (req, res, next) => {
-    await connectToDB();
-    next();
-  },
-  courseRouter,
-);
+app.use("/api/courses", express.json(), courseRouter);
 
-app.use(
-  "/api/enrollment",
-  async (req, res, next) => {
-    await connectToDB();
-    next();
-  },
-  enrollmentRouter,
-);
+app.use("/api/enrollment", enrollmentRouter);
 
 app.use("/api/stripe", paymentRouter);
 
